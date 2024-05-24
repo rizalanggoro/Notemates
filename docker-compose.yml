@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  notemates:
+    image: postgres:16.3
+    command: [ "-c", "log_statement=all" ]
+    ports:
+      - 65432:5432
+    environment:
+      POSTGRES_DB: notemates
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    #      PGDATA: /var/lib/postgresql/data/pgdata
+#    volumes:
+#      - ./data:/var/lib/postgresql/data
