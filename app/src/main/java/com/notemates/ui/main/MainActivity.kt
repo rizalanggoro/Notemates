@@ -13,10 +13,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.notemates.R
+import com.notemates.data.repositories.AuthRepository
 import com.notemates.databinding.ActivityMainBinding
-import com.notemates.repositories.AuthRepository
 import com.notemates.ui.AuthenticationActivity
-import com.notemates.ui.CreateNoteActivity
+import com.notemates.ui.write.note.CreateNoteActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

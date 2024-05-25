@@ -1,10 +1,10 @@
 package com.notemates.core.di
 
 import android.app.Application
+import com.notemates.data.repositories.AuthRepository
 import com.notemates.data.sources.local.Preferences
 import com.notemates.data.sources.remote.ApiConfig
 import com.notemates.data.sources.remote.UserApi
-import com.notemates.repositories.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

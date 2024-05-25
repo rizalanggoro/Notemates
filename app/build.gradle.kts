@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.bcrypt)
 
     implementation(libs.hilt.android)
+    implementation(libs.core)
+    implementation(libs.editor)
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)

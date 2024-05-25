@@ -12,8 +12,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableBoolean
 import arrow.core.Either
 import com.notemates.R
+import com.notemates.data.repositories.AuthRepository
 import com.notemates.databinding.ActivityAuthenticationBinding
-import com.notemates.repositories.AuthRepository
 import com.notemates.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope

@@ -15,6 +15,8 @@ retrofit = "2.11.0"
 arrow = "1.2.4"
 bcrypt = "0.10.2"
 hilt = "2.51.1"
+core = "4.6.2"
+editor = "4.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,6 +35,8 @@ retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref =
 retrofit2-convertergson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 bcrypt = { group = "at.favre.lib", name = "bcrypt", version.ref = "bcrypt" }
+core = { group = "io.noties.markwon", name = "core", version.ref = "core" }
+editor = { group = "io.noties.markwon", name = "editor", version.ref = "editor" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

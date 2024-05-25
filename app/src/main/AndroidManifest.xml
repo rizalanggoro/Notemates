@@ -22,7 +22,7 @@
             android:name=".ui.DetailNoteActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.CreateNoteActivity"
+            android:name=".ui.write.note.CreateNoteActivity"
             android:exported="false" />
         <activity
             android:name=".ui.main.MainActivity"

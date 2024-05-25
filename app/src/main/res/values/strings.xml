@@ -20,4 +20,7 @@
     <string name="trending">Trending</string>
     <string name="profile">Profile</string>
     <string name="logout">Keluar</string>
+    <string name="detail">Rincian</string>
+    <string name="content">Konten</string>
+    <string name="preview">Pratinjau</string>
 </resources>

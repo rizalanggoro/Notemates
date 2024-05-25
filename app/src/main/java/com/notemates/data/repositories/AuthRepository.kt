@@ -1,4 +1,4 @@
-package com.notemates.repositories
+package com.notemates.data.repositories
 
 import android.app.Application
 import androidx.core.content.edit
@@ -67,8 +67,7 @@ class AuthRepository @Inject constructor(
 
         if (!queryResponse.isSuccessful)
             return Either.Left(Error(application.getString(R.string.something_went_wrong)))
-
-
+        
         val queryBody = queryResponse.body()!!
         if (queryBody.paging.size == 0)
             return Either.Left(Error(application.getString(R.string.email_not_found)))

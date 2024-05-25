@@ -8,8 +8,8 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.notemates.R
+import com.notemates.data.repositories.AuthRepository
 import com.notemates.databinding.FragmentProfileBinding
-import com.notemates.repositories.AuthRepository
 import com.notemates.ui.AuthenticationActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

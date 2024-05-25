@@ -17,12 +17,14 @@
 
         <TextView
             android:id="@+id/textViewName"
+            style="@style/TextAppearance.Material3.TitleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{authenticatedUser.name, default=@string/app_name}" />
 
         <TextView
             android:id="@+id/textViewEmail"
+            style="@style/TextAppearance.Material3.BodyMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{authenticatedUser.email, default=@string/app_name}" />
