@@ -59,6 +59,9 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.core)
     implementation(libs.editor)
+    implementation(libs.richeditor.android)
+    implementation(libs.html)
+    implementation(libs.logging.interceptor)
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)

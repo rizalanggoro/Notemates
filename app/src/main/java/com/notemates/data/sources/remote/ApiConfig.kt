@@ -1,12 +1,18 @@
 package com.notemates.data.sources.remote
 
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiConfig {
     companion object {
         private val client = OkHttpClient.Builder()
+            .addInterceptor(
+                HttpLoggingInterceptor().setLevel(
+                    HttpLoggingInterceptor.Level.BODY
+                )
+            )
             .addInterceptor { chain ->
                 chain.proceed(
                     chain.request().newBuilder().also {

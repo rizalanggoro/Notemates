@@ -5,12 +5,8 @@
     <data>
 
         <variable
-            name="counter"
-            type="androidx.databinding.ObservableInt" />
-
-        <variable
-            name="authenticatedUser"
-            type="com.notemates.data.models.User" />
+            name="viewModel"
+            type="com.notemates.ui.write.note.CreateNoteViewModel" />
     </data>
 
     <ScrollView
@@ -23,13 +19,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                style="@style/TextAppearance.Material3.TitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text='@{Integer.toString(counter), default="0"}' />
-
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
@@ -38,10 +27,11 @@
                 android:layout_marginTop="16dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextTitle"
                     style="@style/Widget.Material3.TextInputEditText.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Judul" />
+                    android:hint="@string/title" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -52,20 +42,28 @@
                 android:layout_marginTop="8dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextDescription"
                     style="@style/Widget.Material3.TextInputEditText.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Deskripsi"
+                    android:gravity="top|start"
+                    android:hint="@string/description"
                     android:inputType="textMultiLine"
                     android:lines="5" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginTop="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -77,22 +75,32 @@
                         style="@style/TextAppearance.Material3.TitleMedium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Publikasikan sebagai" />
+                        android:text="@string/publish_as" />
 
                     <TextView
                         style="@style/TextAppearance.Material3.BodyMedium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="@{authenticatedUser.name, default=@string/app_name}" />
+                        android:text="@{viewModel.authenticatedUser.name, default=@string/app_name}" />
 
                     <TextView
                         style="@style/TextAppearance.Material3.LabelMedium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{authenticatedUser.email, default=@string/app_name}" />
+                        android:text="@{viewModel.authenticatedUser.email, default=@string/app_name}" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <Button
+                android:id="@+id/buttonPublish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="32dp"
+                android:enabled="@{viewModel.isLoading ? false : true, default=true}"
+                android:text="@{viewModel.isLoading ? @string/loading: @string/publish, default=@string/publish}" />
         </LinearLayout>
     </ScrollView>
 </layout>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,19 +14,16 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.notemates.R
-import com.notemates.data.repositories.AuthRepository
 import com.notemates.databinding.ActivityMainBinding
 import com.notemates.ui.AuthenticationActivity
 import com.notemates.ui.write.note.CreateNoteActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OnClickListener {
     private lateinit var binding: ActivityMainBinding
 
-    @Inject
-    lateinit var authRepository: AuthRepository
+    private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +38,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             insets
         }
 
-        if (!authRepository.isAuthenticated) {
+        if (!viewModel.isAuthenticated) {
             startActivity(Intent(applicationContext, AuthenticationActivity::class.java))
             finish()
         }

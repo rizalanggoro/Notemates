@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.notemates.databinding.FragmentCreateNoteContentBinding
 import com.notemates.ui.write.note.CreateNoteViewModel
-
+import io.noties.markwon.editor.MarkwonEditorTextWatcher
+import java.util.concurrent.Executors
 
 class CreateNoteContentFragment : Fragment() {
     private var _binding: FragmentCreateNoteContentBinding? = null
@@ -29,10 +31,16 @@ class CreateNoteContentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.counter = viewModel.counter
-        binding.buttonIncrement.setOnClickListener {
-            viewModel.increment()
+        binding.editTextContent.doAfterTextChanged {
+            viewModel.markdownContent.value = it.toString()
         }
+        binding.editTextContent.addTextChangedListener(
+            MarkwonEditorTextWatcher.withPreRender(
+                viewModel.markwonEditor,
+                Executors.newCachedThreadPool(),
+                binding.editTextContent,
+            )
+        )
     }
 
     override fun onDestroy() {

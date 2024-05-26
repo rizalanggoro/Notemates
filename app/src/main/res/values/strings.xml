@@ -10,6 +10,9 @@
     <string name="name_validation_empty">Nama lengkap tidak boleh kosong!</string>
     <string name="email_validation_empty">Alamat email tidak boleh kosong!</string>
     <string name="password_validation_empty">Kata sandi tidak boleh kosong!</string>
+    <string name="title_validation_empty">Judul tidak boleh kosong!</string>
+    <string name="description_validation_empty">Deskripsi tidak boleh kosong!</string>
+    <string name="content_validation_empty">Konten tidak boleh kosong!</string>
     <string name="confirm_password_validation_incorrect">Konfirmasi kata sandi tidak cocok!</string>
     <string name="something_went_wrong">Terjadi kesalahan tak terduga!</string>
     <string name="email_already_registered">Alamat email sudah terdaftar! Silahkan gunakan alamat email lain</string>
@@ -23,4 +26,12 @@
     <string name="detail">Rincian</string>
     <string name="content">Konten</string>
     <string name="preview">Pratinjau</string>
+    <string name="create_note">Buat Catatan</string>
+    <string name="publish">Publikasi</string>
+    <string name="loading">Memuat</string>
+    <string name="title">Judul</string>
+    <string name="description">Deskripsi</string>
+    <string name="publish_as">Publikasikan sebagai</string>
+    <string name="write_something">Ketik sesuatu</string>
+    <string name="dashboard_greeting">Hello, %s</string>
 </resources>

@@ -2,29 +2,26 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="counter"
-            type="androidx.databinding.ObservableInt" />
-    </data>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".ui.write.note.fragments.CreateNoteContentFragment">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{Integer.toString(counter), default=hello}" />
+            android:layout_margin="16dp">
 
-        <Button
-            android:id="@+id/buttonIncrement"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="Increment" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextContent"
+                style="@style/Widget.Material3.TextInputEditText.FilledBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:hint="@string/write_something"
+                android:minLines="5" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 </layout>

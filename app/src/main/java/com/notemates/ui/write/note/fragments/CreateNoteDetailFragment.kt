@@ -6,19 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.notemates.data.repositories.AuthRepository
 import com.notemates.databinding.FragmentCreateNoteDetailBinding
 import com.notemates.ui.write.note.CreateNoteViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class CreateNoteDetailFragment : Fragment() {
     private var _binding: FragmentCreateNoteDetailBinding? = null
     private val binding get() = _binding!!
-
-    @Inject
-    lateinit var authRepository: AuthRepository
 
     private val viewModel: CreateNoteViewModel by viewModels(
         ownerProducer = { requireActivity() }
@@ -35,8 +28,12 @@ class CreateNoteDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.authenticatedUser = authRepository.authenticatedUser
-        binding.counter = viewModel.counter
+        binding.viewModel = viewModel
+        binding.buttonPublish.setOnClickListener {
+            val title = binding.editTextTitle.text.toString()
+            val description = binding.editTextDescription.text.toString()
+            viewModel.publish(title, description)
+        }
     }
 
     override fun onDestroy() {

@@ -13,19 +13,19 @@ class CreateNoteFragmentStateAdapter(activity: AppCompatActivity) : FragmentStat
     companion object {
         @IdRes
         val titles = listOf(
-            R.string.detail,
             R.string.content,
             R.string.preview,
+            R.string.detail,
         )
     }
 
-    override fun getItemCount(): Int = 3
+    override fun getItemCount(): Int = titles.size
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> CreateNoteDetailFragment()
-            1 -> CreateNoteContentFragment()
-            else -> CreateNotePreviewFragment()
+            0 -> CreateNoteContentFragment()
+            1 -> CreateNotePreviewFragment()
+            else -> CreateNoteDetailFragment()
         }
     }
 }

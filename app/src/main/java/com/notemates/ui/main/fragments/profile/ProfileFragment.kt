@@ -1,26 +1,22 @@
-package com.notemates.ui.main.fragments
+package com.notemates.ui.main.fragments.profile
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.notemates.R
-import com.notemates.data.repositories.AuthRepository
+import androidx.fragment.app.viewModels
 import com.notemates.databinding.FragmentProfileBinding
 import com.notemates.ui.AuthenticationActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment(), OnClickListener {
+class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    @Inject
-    lateinit var authRepository: AuthRepository
+    private val viewModel by viewModels<ProfileViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,24 +29,17 @@ class ProfileFragment : Fragment(), OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.authenticatedUser = authRepository.authenticatedUser
+        binding.viewModel = viewModel
 
-        binding.buttonLogout.setOnClickListener(this)
+        binding.buttonLogout.setOnClickListener {
+            viewModel.logout()
+            startActivity(Intent(requireContext(), AuthenticationActivity::class.java))
+            requireActivity().finish()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.buttonLogout -> {
-                authRepository.logout()
-                startActivity(Intent(requireContext(), AuthenticationActivity::class.java)).also {
-                    requireActivity().finish()
-                }
-            }
-        }
     }
 }

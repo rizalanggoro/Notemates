@@ -17,7 +17,7 @@ class CreateNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateNoteBinding
 
     private val viewModel by viewModels<CreateNoteViewModel>()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,6 +36,7 @@ class CreateNoteActivity : AppCompatActivity() {
 
         val fragmentStateAdapter = CreateNoteFragmentStateAdapter(this)
         binding.viewPager.adapter = fragmentStateAdapter
+        binding.viewPager.isUserInputEnabled = false
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = getString(CreateNoteFragmentStateAdapter.titles[position])
         }.attach()
