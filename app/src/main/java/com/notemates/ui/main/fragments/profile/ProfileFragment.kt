@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.notemates.databinding.FragmentProfileBinding
-import com.notemates.ui.AuthenticationActivity
+import com.notemates.ui.auth.AuthActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -29,12 +31,23 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewModel = viewModel
+        lifecycleScope.launch {
+            viewModel.uiState.collect {
+                when (it) {
+                    ProfileUiState.Initial -> {}
+                    ProfileUiState.LogoutSuccess -> {
+                        startActivity(Intent(requireContext(), AuthActivity::class.java))
+                        requireActivity().finish()
+                    }
+                }
+            }
+        }
+
+        binding.textViewName.text = viewModel.authenticatedUser?.name ?: "No name"
+        binding.textViewEmail.text = viewModel.authenticatedUser?.email ?: "No email"
 
         binding.buttonLogout.setOnClickListener {
             viewModel.logout()
-            startActivity(Intent(requireContext(), AuthenticationActivity::class.java))
-            requireActivity().finish()
         }
     }
 

@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.richeditor.android)
     implementation(libs.html)
     implementation(libs.logging.interceptor)
+    implementation(libs.androidx.swiperefreshlayout)
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)

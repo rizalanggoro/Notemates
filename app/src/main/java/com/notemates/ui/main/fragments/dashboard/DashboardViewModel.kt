@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import arrow.core.Either
 import com.notemates.data.models.Note
+import com.notemates.data.models.User
 import com.notemates.data.repositories.AuthRepository
 import com.notemates.data.repositories.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ class DashboardViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val noteRepository: NoteRepository,
 ) : ViewModel() {
-    val authenticatedUser = authRepository.authenticatedUser
+    val authenticatedUser: User? get() = authRepository.authenticatedUser
+
     val isLoading = ObservableBoolean(false)
     val listNotes = MutableLiveData<List<Note>>(listOf())
 
@@ -27,20 +29,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun getLatestNotes() {
-        isLoading.set(true)
-        CoroutineScope(Dispatchers.IO).launch {
-            val result = noteRepository.getLatestNotes()
-
-            launch(Dispatchers.Main) {
-                isLoading.set(false)
-                when (result) {
-                    is Either.Left -> {}
-                    is Either.Right -> {
-                        listNotes.value = result.value
-                    }
-                }
-            }
-        }
+        
     }
 
     fun refreshLatestNotes() = getLatestNotes()

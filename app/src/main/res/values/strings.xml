@@ -15,6 +15,7 @@
     <string name="content_validation_empty">Konten tidak boleh kosong!</string>
     <string name="confirm_password_validation_incorrect">Konfirmasi kata sandi tidak cocok!</string>
     <string name="something_went_wrong">Terjadi kesalahan tak terduga!</string>
+    <string name="bad_request">Request tidak valid!</string>
     <string name="email_already_registered">Alamat email sudah terdaftar! Silahkan gunakan alamat email lain</string>
     <string name="email_not_found">Alamat email tidak ditemukan! Silahkan gunakan alamat email lain</string>
     <string name="invalid_email_or_password">Alamat email atau kata sandi tidak valid!</string>

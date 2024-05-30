@@ -49,6 +49,8 @@ class NoteAdapter(
             }
             binding.textViewTitle.text = note.title
             binding.textViewDescription.text = note.description
+            binding.textViewView.text = note.view.toString()
+            binding.textViewLike.text = note.like.toString()
         }
     }
 }

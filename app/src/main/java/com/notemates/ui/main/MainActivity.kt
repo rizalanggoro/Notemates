@@ -15,14 +15,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.notemates.R
 import com.notemates.databinding.ActivityMainBinding
-import com.notemates.ui.AuthenticationActivity
+import com.notemates.ui.auth.AuthActivity
 import com.notemates.ui.write.note.CreateNoteActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OnClickListener {
     private lateinit var binding: ActivityMainBinding
-
     private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,27 +37,31 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             insets
         }
 
-        if (!viewModel.isAuthenticated) {
-            startActivity(Intent(applicationContext, AuthenticationActivity::class.java))
+        if (viewModel.authenticatedUser == null) {
+            startActivity(Intent(applicationContext, AuthActivity::class.java))
             finish()
         }
 
         setSupportActionBar(binding.toolbar)
-
         val bottomNavigationView = binding.bottomNavigationView
         val navController = findNavController(R.id.fragment_container_view)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.profile_fragment -> binding.fabCreateNote.hide()
-                else -> binding.fabCreateNote.show()
+                R.id.profile_fragment -> {
+                    binding.fabCreateNote.hide()
+                }
+
+                else -> {
+                    binding.fabCreateNote.show()
+                }
             }
         }
 
         setupActionBarWithNavController(
             navController, AppBarConfiguration(
                 setOf(
-                    R.id.home_fragment,
+                    R.id.dashboard_fragment,
                     R.id.explore_fragment,
                     R.id.trending_fragment,
                     R.id.profile_fragment,
@@ -68,6 +71,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         bottomNavigationView.setupWithNavController(navController)
 
         binding.fabCreateNote.setOnClickListener(this)
+
+//        startActivity(Intent(this, SearchActivity::class.java))
     }
 
     override fun onClick(v: View?) {

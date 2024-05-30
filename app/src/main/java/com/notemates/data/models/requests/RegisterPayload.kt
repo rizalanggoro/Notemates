@@ -1,7 +1,6 @@
-package com.notemates.data.models
+package com.notemates.data.models.requests
 
-data class User(
-    val id: Int,
+data class RegisterPayload(
     val name: String,
     val email: String,
     val password: String,

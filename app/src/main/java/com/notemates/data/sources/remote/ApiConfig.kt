@@ -7,27 +7,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiConfig {
     companion object {
+        private const val BASE_URL = "https://notemates-api.vercel.app"
+//        private const val BASE_URL =
+//            "https://c6c6-2001-448a-4023-2a22-6c7a-dd66-be40-6a22.ngrok-free.app"
+
         private val client = OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor().setLevel(
                     HttpLoggingInterceptor.Level.BODY
                 )
             )
-            .addInterceptor { chain ->
-                chain.proceed(
-                    chain.request().newBuilder().also {
-                        it.addHeader(
-                            "X-API-Key",
-                            "c0caqzhesqu_M8BozmKcG9oTRvz8G1MJjuQRb59FetnU"
-                        )
-                        it.addHeader("Content-Type", "application/json")
-                    }.build()
-                )
-            }
             .build()
 
         val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl("https://database.deta.sh/v1/c0caqzhesqu/")
+            .baseUrl("$BASE_URL/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
