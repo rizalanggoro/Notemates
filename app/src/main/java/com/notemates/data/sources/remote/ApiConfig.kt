@@ -9,7 +9,7 @@ class ApiConfig {
     companion object {
         private const val BASE_URL = "https://notemates-api.vercel.app"
 //        private const val BASE_URL =
-//            "https://c6c6-2001-448a-4023-2a22-6c7a-dd66-be40-6a22.ngrok-free.app"
+//            "https://758f-2001-448a-4027-1e11-c446-d811-356f-b4eb.ngrok-free.app"
 
         private val client = OkHttpClient.Builder()
             .addInterceptor(

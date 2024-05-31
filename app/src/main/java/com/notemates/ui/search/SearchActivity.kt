@@ -8,10 +8,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.google.gson.Gson
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.notemates.core.utils.StateStatus
 import com.notemates.core.utils.Utils
 import com.notemates.databinding.ActivitySearchBinding
+import com.notemates.ui.search.adapter.SearchAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private val viewModel by viewModels<SearchViewModel>()
+    private lateinit var searchAdapter: SearchAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,8 @@ class SearchActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        initializeRecyclerView()
+
         lifecycleScope.launch {
             viewModel.uiState.collect {
                 val (action, status, message) = it
@@ -47,8 +51,10 @@ class SearchActivity : AppCompatActivity() {
                         else {
                             showLoadingUi(false)
                             if (status == StateStatus.Success)
-                                binding.textViewResult.text =
-                                    "${Gson().toJson(it.users)}\n${Gson().toJson(it.notes)}"
+                                searchAdapter.setData(
+                                    users = it.users,
+                                    notes = it.notes,
+                                )
                             else if (status == StateStatus.Failure)
                                 Utils.showSnackbar(binding.root, message)
                         }
@@ -62,6 +68,14 @@ class SearchActivity : AppCompatActivity() {
                 val keyword = editTextSearch.text.toString()
                 viewModel.search(keyword)
             }
+        }
+    }
+
+    private fun initializeRecyclerView() {
+        searchAdapter = SearchAdapter()
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(applicationContext)
+            adapter = searchAdapter
         }
     }
 
