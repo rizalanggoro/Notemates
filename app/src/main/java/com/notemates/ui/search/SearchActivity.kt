@@ -1,6 +1,9 @@
 package com.notemates.ui.search
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.notemates.core.utils.StateStatus
 import com.notemates.core.utils.Utils
+import com.notemates.data.models.responses.SearchResponse
 import com.notemates.databinding.ActivitySearchBinding
+import com.notemates.ui.detail.note.DetailNoteActivity
+import com.notemates.ui.detail.user.DetailUserActivity
 import com.notemates.ui.search.adapter.SearchAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -44,18 +50,16 @@ class SearchActivity : AppCompatActivity() {
             viewModel.uiState.collect {
                 val (action, status, message) = it
                 when (action) {
-                    SearchUiAction.Initial -> {}
-                    SearchUiAction.Search -> {
+                    SearchUiState.Action.Initial -> {}
+                    SearchUiState.Action.Search -> {
                         if (status == StateStatus.Loading)
                             showLoadingUi(true)
                         else {
                             showLoadingUi(false)
-                            if (status == StateStatus.Success)
-                                searchAdapter.setData(
-                                    users = it.users,
-                                    notes = it.notes,
-                                )
-                            else if (status == StateStatus.Failure)
+                            if (status == StateStatus.Success) {
+                                if (it.searchResponse != null)
+                                    searchAdapter.setData(it.searchResponse)
+                            } else if (status == StateStatus.Failure)
                                 Utils.showSnackbar(binding.root, message)
                         }
                     }
@@ -64,15 +68,35 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.apply {
-            buttonSearch.setOnClickListener {
-                val keyword = editTextSearch.text.toString()
-                viewModel.search(keyword)
+            editTextSearch.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    viewModel.search(v.text.toString())
+                    return@setOnEditorActionListener true
+                }
+
+                false
             }
         }
     }
 
     private fun initializeRecyclerView() {
-        searchAdapter = SearchAdapter()
+        searchAdapter = SearchAdapter(applicationContext) {
+            if (it is SearchResponse.User) startActivity(
+                Intent(
+                    applicationContext,
+                    DetailUserActivity::class.java
+                ).apply {
+                    putExtra("idUser", it.id)
+                })
+            else if (it is SearchResponse.Note) startActivity(
+                Intent(
+                    applicationContext,
+                    DetailNoteActivity::class.java,
+                ).apply {
+                    putExtra("idNote", it.id)
+                }
+            )
+        }
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(applicationContext)
             adapter = searchAdapter
@@ -82,8 +106,13 @@ class SearchActivity : AppCompatActivity() {
     private fun showLoadingUi(isLoading: Boolean) {
         binding.apply {
             progressIndicator.isVisible = isLoading
-            buttonSearch.isEnabled = !isLoading
-            editTextSearch.isEnabled = !isLoading
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -23,7 +23,7 @@ class SearchViewModel @Inject constructor(
 
     fun search(keyword: String) {
         _uiState.value = uiState.value.copy(
-            action = SearchUiAction.Search,
+            action = SearchUiState.Action.Search,
             status = StateStatus.Loading,
         )
 
@@ -32,17 +32,16 @@ class SearchViewModel @Inject constructor(
             launch {
                 when (result) {
                     is Either.Left -> _uiState.value = uiState.value.copy(
-                        action = SearchUiAction.Search,
+                        action = SearchUiState.Action.Search,
                         status = StateStatus.Failure,
                         message = result.value.message
                             ?: application.getString(R.string.something_went_wrong),
                     )
 
                     is Either.Right -> _uiState.value = uiState.value.copy(
-                        action = SearchUiAction.Search,
+                        action = SearchUiState.Action.Search,
                         status = StateStatus.Success,
-                        users = result.value.users,
-                        notes = result.value.notes,
+                        searchResponse = result.value,
                     )
                 }
             }

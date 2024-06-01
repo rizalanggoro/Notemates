@@ -1,23 +1,28 @@
 package com.notemates.ui.search.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.notemates.data.models.Note
-import com.notemates.data.models.User
+import com.notemates.R
+import com.notemates.core.utils.dp
+import com.notemates.data.models.responses.SearchResponse
 import com.notemates.databinding.ListItemSearchNoteBinding
 import com.notemates.databinding.ListItemSearchUserBinding
 
-class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var users: List<User> = listOf()
-    private var notes: List<Note> = listOf()
+
+class SearchAdapter(
+    private val context: Context,
+    private val onItemClick: (item: Any) -> Unit,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var searchResponse: SearchResponse? = null
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(users: List<User>, notes: List<Note>) {
-        this.users = users
-        this.notes = notes
+    fun setData(searchResponse: SearchResponse) {
+        this.searchResponse = searchResponse
         notifyDataSetChanged()
     }
 
@@ -48,30 +53,55 @@ class SearchAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun getItemViewType(position: Int): Int =
-        if (position < users.size) 0 else 1
+        if (position < searchResponse!!.users.size) 0 else 1
 
-    override fun getItemCount(): Int = users.size + notes.size
+    override fun getItemCount(): Int =
+        if (searchResponse != null) searchResponse!!.users.size + searchResponse!!.notes.size
+        else 0
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is UserViewHolder -> {
-                val user = users[position]
+                val user = searchResponse!!.users[position]
                 with(holder) {
                     binding.apply {
                         textViewSectionName.isVisible = position == 0
                         textViewName.text = user.name
                         textViewEmail.text = user.email
+                        textViewFollowedBy.text = String.format(
+                            context.getString(R.string.format_followers),
+                            user.count.followedBy
+                        )
+
+                        container.setOnClickListener {
+                            onItemClick(user)
+                        }
                     }
                 }
             }
 
             is NoteViewHolder -> {
-                val note = notes[position - users.size]
+                val usersSize = searchResponse!!.users.size
+                val note = searchResponse!!.notes[position - usersSize]
                 with(holder) {
                     binding.apply {
-                        textViewSectionName.isVisible = (position - users.size) == 0
+                        val newPosition = (position - usersSize)
+
+                        (cardView.layoutParams as LinearLayout.LayoutParams).apply {
+                            setMargins(16.dp, if (newPosition == 0) 0 else 4.dp, 16.dp, 0)
+                        }
+
+                        dividerSection.isVisible = newPosition == 0
+                        textViewSectionName.isVisible = newPosition == 0
                         textViewTitle.text = note.title
                         textViewDescription.text = note.description
+                        textViewUser.text = note.user.name
+                        textViewComments.text = note.count.comments.toString()
+                        textViewLikes.text = note.count.likes.toString()
+
+                        cardView.setOnClickListener {
+                            onItemClick(note)
+                        }
                     }
                 }
             }

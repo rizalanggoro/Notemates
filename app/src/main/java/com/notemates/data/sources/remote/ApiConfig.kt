@@ -8,8 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiConfig {
     companion object {
         private const val BASE_URL = "https://notemates-api.vercel.app"
-//        private const val BASE_URL =
-//            "https://758f-2001-448a-4027-1e11-c446-d811-356f-b4eb.ngrok-free.app"
+//        private const val BASE_URL = "http://192.168.1.14:3000"
 
         private val client = OkHttpClient.Builder()
             .addInterceptor(

@@ -3,11 +3,13 @@ package com.notemates.core.di
 import android.app.Application
 import com.notemates.data.repositories.AuthRepository
 import com.notemates.data.repositories.NoteRepository
+import com.notemates.data.repositories.UserRepository
 import com.notemates.data.sources.local.Preferences
 import com.notemates.data.sources.remote.ApiConfig
 import com.notemates.data.sources.remote.AuthApi
 import com.notemates.data.sources.remote.NoteApi
 import com.notemates.data.sources.remote.SearchApi
+import com.notemates.data.sources.remote.UserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,6 +39,10 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideUserApi(): UserApi = ApiConfig.retrofit.create(UserApi::class.java)
+
+    @Provides
+    @Singleton
     fun provideAuthRepository(
         application: Application,
         authApi: AuthApi,
@@ -55,5 +61,15 @@ object AppModule {
     ): NoteRepository = NoteRepository(
         application = application,
         noteApi = noteApi,
+    )
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(
+        application: Application,
+        userApi: UserApi,
+    ) = UserRepository(
+        application = application,
+        userApi = userApi,
     )
 }

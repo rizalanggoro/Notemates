@@ -48,8 +48,8 @@ class ExploreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initializeMenu()
-        initializeRecyclerView()
+        initRecyclerView()
+        initToolbarMenu()
 
         lifecycleScope.launch {
             viewModel.uiState.collect {
@@ -81,7 +81,29 @@ class ExploreFragment : Fragment() {
         binding.progressIndicator.isVisible = isLoading
     }
 
-    private fun initializeRecyclerView() {
+    fun initToolbarMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.main_explore, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menuSearch -> startActivity(
+                        Intent(
+                            requireContext(),
+                            SearchActivity::class.java
+                        )
+                    )
+                }
+
+                return true
+            }
+        })
+    }
+
+    private fun initRecyclerView() {
         latestNotesAdapter = NoteAdapter { position, note ->
         }
 
@@ -89,30 +111,5 @@ class ExploreFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = latestNotesAdapter
         }
-    }
-
-    private fun initializeMenu() {
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(
-            object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.main_explore, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    when (menuItem.itemId) {
-                        R.id.menuSearch -> startActivity(
-                            Intent(
-                                requireContext(),
-                                SearchActivity::class.java
-                            )
-                        )
-                    }
-                    return true
-                }
-
-            },
-            viewLifecycleOwner
-        )
     }
 }
