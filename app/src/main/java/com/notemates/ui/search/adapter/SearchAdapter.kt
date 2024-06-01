@@ -98,6 +98,7 @@ class SearchAdapter(
                         textViewUser.text = note.user.name
                         textViewComments.text = note.count.comments.toString()
                         textViewLikes.text = note.count.likes.toString()
+                        textViewViews.text = note.views.toString()
 
                         cardView.setOnClickListener {
                             onItemClick(note)

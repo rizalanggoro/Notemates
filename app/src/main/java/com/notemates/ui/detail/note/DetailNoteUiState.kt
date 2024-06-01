@@ -1,10 +1,10 @@
-package com.notemates.ui.main.fragments.explore
+package com.notemates.ui.detail.note
 
 import com.notemates.core.utils.StateStatus
 import com.notemates.data.models.Note
 
-data class ExploreUiState(
+data class DetailNoteUiState(
     val status: StateStatus = StateStatus.Initial,
     val message: String = "",
-    val notes: List<Note> = listOf(),
+    val response: Note? = null,
 )

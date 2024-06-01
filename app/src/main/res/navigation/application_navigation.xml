@@ -16,7 +16,7 @@
         tools:layout="@layout/fragment_explore" />
     <fragment
         android:id="@+id/trending_fragment"
-        android:name="com.notemates.ui.main.fragments.TrendingFragment"
+        android:name="com.notemates.ui.main.fragments.trending.TrendingFragment"
         android:label="@string/trending"
         tools:layout="@layout/fragment_trending" />
     <fragment

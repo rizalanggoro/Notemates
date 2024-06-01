@@ -1,6 +1,7 @@
 package com.notemates.data.models.responses
 
 import com.google.gson.annotations.SerializedName
+import com.notemates.data.models.Note
 
 data class UserProfileResponse(
     val id: Int,
@@ -15,17 +16,4 @@ data class UserProfileResponse(
         val following: Int,
         val notes: Int,
     )
-
-    data class Note(
-        val id: Int,
-        val title: String,
-        val description: String,
-        val views: Int,
-        @field:SerializedName("_count") val count: Count,
-    ) {
-        data class Count(
-            val comments: Int,
-            val likes: Int,
-        )
-    }
 }

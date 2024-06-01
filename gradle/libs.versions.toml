@@ -21,6 +21,8 @@ richeditorAndroid = "2.0.0"
 html = "4.6.2"
 loggingInterceptor = "5.0.0-alpha.14"
 swiperefreshlayout = "1.2.0-alpha01"
+imageGlide = "4.6.2"
+syntaxHighlight = "4.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +47,8 @@ richeditor-android = { group = "jp.wasabeef", name = "richeditor-android", versi
 html = { group = "io.noties.markwon", name = "html", version.ref = "html" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+image-glide = { group = "io.noties.markwon", name = "image-glide", version.ref = "imageGlide" }
+syntax-highlight = { group = "io.noties.markwon", name = "syntax-highlight", version.ref = "syntaxHighlight" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

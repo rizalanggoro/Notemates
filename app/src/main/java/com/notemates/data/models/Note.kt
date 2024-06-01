@@ -7,11 +7,16 @@ data class Note(
     val title: String,
     val description: String,
     val content: String,
-    val authorId: Int, // rename jadi idauthor
+    val views: Int,
     @field:SerializedName("_count") val count: Count,
+    val user: User,
 ) {
     data class Count(
-        val like: Int,
+        val likes: Int,
         val comments: Int,
+    )
+
+    data class User(
+        val name: String,
     )
 }

@@ -54,8 +54,8 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-//        startActivity(Intent(this, DetailUserActivity::class.java).apply {
-//            putExtra("idUser", 1)
+//        startActivity(Intent(this, DetailNoteActivity::class.java).apply {
+//            putExtra("idNote", 1)
 //        })
     }
 

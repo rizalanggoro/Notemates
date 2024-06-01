@@ -1,5 +1,6 @@
 package com.notemates.ui.detail.user
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +16,7 @@ import com.notemates.core.utils.Utils
 import com.notemates.data.models.responses.UserProfileResponse
 import com.notemates.databinding.ActivityDetailUserBinding
 import com.notemates.ui.adapters.NoteAdapter
+import com.notemates.ui.detail.note.DetailNoteActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -22,7 +24,7 @@ import kotlinx.coroutines.launch
 class DetailUserActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailUserBinding
     private val viewModel by viewModels<DetailUserViewModel>()
-    private lateinit var noteAdapter: NoteAdapter<UserProfileResponse.Note>
+    private lateinit var noteAdapter: NoteAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +82,11 @@ class DetailUserActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        noteAdapter = NoteAdapter(type = NoteAdapter.Type.Profile)
+        noteAdapter = NoteAdapter(type = NoteAdapter.Type.Profile) {
+            startActivity(Intent(applicationContext, DetailNoteActivity::class.java).apply {
+                putExtra("idNote", it)
+            })
+        }
 
         binding.recyclerViewNotes.apply {
             layoutManager = object : LinearLayoutManager(application) {
@@ -103,7 +109,7 @@ class DetailUserActivity : AppCompatActivity() {
             buttonUnfollow.isVisible = response.isFollowed
         }
 
-        noteAdapter.setData(response.notes)
+        noteAdapter.setNotes(response.notes)
     }
 
     private fun showLoadingUi(isLoading: Boolean) {

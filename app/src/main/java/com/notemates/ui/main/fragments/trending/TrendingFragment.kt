@@ -1,4 +1,4 @@
-package com.notemates.ui.main.fragments.dashboard
+package com.notemates.ui.main.fragments.trending
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,32 +12,38 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.notemates.core.utils.StateStatus
 import com.notemates.core.utils.Utils
-import com.notemates.databinding.FragmentDashboardBinding
+import com.notemates.databinding.FragmentTrendingBinding
 import com.notemates.ui.adapters.NoteAdapter
 import com.notemates.ui.detail.note.DetailNoteActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment() {
-    private var _binding: FragmentDashboardBinding? = null
+class TrendingFragment : Fragment() {
+    private var _binding: FragmentTrendingBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<DashboardViewModel>()
+    private val viewModel by viewModels<TrendingViewModel>()
     private lateinit var noteAdapter: NoteAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentTrendingBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initRecyclerView()
-        viewModel.getNotes()
+        viewModel.getTrending()
 
         lifecycleScope.launch {
             viewModel.uiState.collect {
@@ -49,23 +55,22 @@ class DashboardFragment : Fragment() {
                     if (status == StateStatus.Failure)
                         Utils.showSnackbar(binding.root, message)
                     else if (status == StateStatus.Success)
-                        noteAdapter.setNotes(it.response)
+                        noteAdapter.setNotes(it.notes)
                 }
             }
         }
 
         binding.apply {
             swipeRefreshLayout.setOnRefreshListener {
-                viewModel.getNotes()
+                viewModel.getTrending()
                 if (swipeRefreshLayout.isRefreshing)
                     swipeRefreshLayout.isRefreshing = false
             }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+    private fun showLoadingUi(isLoading: Boolean) {
+        binding.progressIndicator.isVisible = isLoading
     }
 
     private fun initRecyclerView() {
@@ -80,12 +85,6 @@ class DashboardFragment : Fragment() {
             }
             adapter = noteAdapter
             isNestedScrollingEnabled = false
-        }
-    }
-
-    private fun showLoadingUi(isLoading: Boolean) {
-        binding.apply {
-            progressIndicator.isVisible = isLoading
         }
     }
 }

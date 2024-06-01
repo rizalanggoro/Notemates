@@ -1,4 +1,4 @@
-package com.notemates.ui.detail.note
+package com.notemates.ui.main.fragments.trending
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -14,22 +14,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailNoteViewModel @Inject constructor(
+class TrendingViewModel @Inject constructor(
     private val application: Application,
     private val noteRepository: NoteRepository,
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<DetailNoteUiState> =
-        MutableStateFlow(DetailNoteUiState())
-    val uiState: StateFlow<DetailNoteUiState> = _uiState
+    private val _uiState: MutableStateFlow<TrendingUiState> = MutableStateFlow(TrendingUiState())
+    val uiState: StateFlow<TrendingUiState> = _uiState
 
-    fun getNoteById(idNote: Int) {
+    fun getTrending() {
         _uiState.value = uiState.value.copy(
             status = StateStatus.Loading,
         )
-
         viewModelScope.launch {
-            noteRepository.incrementView(idNote)
-            val result = noteRepository.get(idNote)
+            val result = noteRepository.getTrending()
             launch {
                 when (result) {
                     is Either.Left -> _uiState.value = uiState.value.copy(
@@ -40,7 +37,7 @@ class DetailNoteViewModel @Inject constructor(
 
                     is Either.Right -> _uiState.value = uiState.value.copy(
                         status = StateStatus.Success,
-                        response = result.value,
+                        notes = result.value,
                     )
                 }
             }

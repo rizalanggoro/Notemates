@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.notemates.core.utils.StateStatus
 import com.notemates.core.utils.Utils
+import com.notemates.data.models.Note
 import com.notemates.data.models.responses.SearchResponse
 import com.notemates.databinding.ActivitySearchBinding
 import com.notemates.ui.detail.note.DetailNoteActivity
@@ -68,7 +69,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.apply {
-            editTextSearch.setOnEditorActionListener { v, actionId, event ->
+            editTextSearch.setOnEditorActionListener { v, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     viewModel.search(v.text.toString())
                     return@setOnEditorActionListener true
@@ -88,7 +89,7 @@ class SearchActivity : AppCompatActivity() {
                 ).apply {
                     putExtra("idUser", it.id)
                 })
-            else if (it is SearchResponse.Note) startActivity(
+            else if (it is Note) startActivity(
                 Intent(
                     applicationContext,
                     DetailNoteActivity::class.java,

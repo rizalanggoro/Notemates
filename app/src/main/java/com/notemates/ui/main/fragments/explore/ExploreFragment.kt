@@ -8,7 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,7 +18,8 @@ import com.notemates.R
 import com.notemates.core.utils.StateStatus
 import com.notemates.core.utils.Utils
 import com.notemates.databinding.FragmentExploreBinding
-import com.notemates.ui.main.adapters.NoteAdapter
+import com.notemates.ui.adapters.NoteAdapter
+import com.notemates.ui.detail.note.DetailNoteActivity
 import com.notemates.ui.search.SearchActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -28,9 +28,10 @@ import kotlinx.coroutines.launch
 class ExploreFragment : Fragment() {
     private var _binding: FragmentExploreBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel by viewModels<ExploreViewModel>()
-    private lateinit var latestNotesAdapter: NoteAdapter
+
+    private lateinit var noteAdapter: NoteAdapter
+    private lateinit var menuProvider: MenuProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +43,7 @@ class ExploreFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        requireActivity().removeMenuProvider(menuProvider)
         _binding = null
     }
 
@@ -50,30 +52,29 @@ class ExploreFragment : Fragment() {
 
         initRecyclerView()
         initToolbarMenu()
+        viewModel.getLatest()
 
         lifecycleScope.launch {
             viewModel.uiState.collect {
-                val (action, status, message) = it
-                when (action) {
-                    ExploreUiAction.Initial -> {}
-                    ExploreUiAction.GetLatestNotes -> {
-                        if (status == StateStatus.Loading)
-                            showLoadingUi(true)
-                        else {
-                            showLoadingUi(false)
-                            if (status == StateStatus.Failure)
-                                Utils.showSnackbar(binding.root, message)
-                            else if (status == StateStatus.Success)
-                                latestNotesAdapter.setData(it.listLatestNotes)
-                        }
-                    }
+                val (status, message) = it
+                if (status == StateStatus.Loading)
+                    showLoadingUi(true)
+                else {
+                    showLoadingUi(false)
+                    if (status == StateStatus.Failure)
+                        Utils.showSnackbar(binding.root, message)
+                    else if (status == StateStatus.Success)
+                        noteAdapter.setNotes(it.notes)
                 }
             }
         }
 
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.getLatest()
-            binding.swipeRefreshLayout.isRefreshing = false
+        binding.apply {
+            swipeRefreshLayout.setOnRefreshListener {
+                viewModel.getLatest()
+                if (swipeRefreshLayout.isRefreshing)
+                    swipeRefreshLayout.isRefreshing = false
+            }
         }
     }
 
@@ -81,9 +82,8 @@ class ExploreFragment : Fragment() {
         binding.progressIndicator.isVisible = isLoading
     }
 
-    fun initToolbarMenu() {
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
+    private fun initToolbarMenu() {
+        menuProvider = object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_explore, menu)
             }
@@ -97,19 +97,25 @@ class ExploreFragment : Fragment() {
                         )
                     )
                 }
-
                 return true
             }
-        })
+        }
+
+        requireActivity().addMenuProvider(menuProvider)
     }
 
     private fun initRecyclerView() {
-        latestNotesAdapter = NoteAdapter { position, note ->
+        noteAdapter = NoteAdapter(NoteAdapter.Type.Default) {
+            startActivity(Intent(requireContext(), DetailNoteActivity::class.java).apply {
+                putExtra("idNote", it)
+            })
         }
-
-        binding.recyclerViewLatestNotes.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = latestNotesAdapter
+        binding.recyclerView.apply {
+            layoutManager = object : LinearLayoutManager(requireContext()) {
+                override fun canScrollVertically(): Boolean = false
+            }
+            adapter = noteAdapter
+            isNestedScrollingEnabled = false
         }
     }
 }

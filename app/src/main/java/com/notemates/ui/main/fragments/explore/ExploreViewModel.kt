@@ -21,31 +21,23 @@ class ExploreViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<ExploreUiState> = MutableStateFlow(ExploreUiState())
     val uiState: StateFlow<ExploreUiState> = _uiState
 
-    init {
-        getLatest()
-    }
-
     fun getLatest() {
         _uiState.value = uiState.value.copy(
-            action = ExploreUiAction.GetLatestNotes,
             status = StateStatus.Loading,
         )
-
         viewModelScope.launch {
             val result = noteRepository.getLatest()
             launch {
                 when (result) {
                     is Either.Left -> _uiState.value = uiState.value.copy(
-                        action = ExploreUiAction.GetLatestNotes,
                         status = StateStatus.Failure,
                         message = result.value.message
                             ?: application.getString(R.string.something_went_wrong)
                     )
 
                     is Either.Right -> _uiState.value = uiState.value.copy(
-                        action = ExploreUiAction.GetLatestNotes,
                         status = StateStatus.Success,
-                        listLatestNotes = result.value,
+                        notes = result.value,
                     )
                 }
             }

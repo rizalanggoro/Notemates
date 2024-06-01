@@ -7,32 +7,33 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.notemates.core.utils.dp
-import com.notemates.data.models.responses.UserProfileResponse
-import com.notemates.databinding.ListItemNoteBinding
+import com.notemates.data.models.Note
+import com.notemates.databinding.ListItemDefaultNoteBinding
 import com.notemates.databinding.ListItemProfileNoteBinding
 
-class NoteAdapter<T>(
+class NoteAdapter(
     private val type: Type,
+    private val onItemClick: (idNote: Int) -> Unit,
 ) : RecyclerView.Adapter<ViewHolder>() {
-    private var data: List<T> = listOf()
+    private var notes: List<Note> = listOf()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(data: List<T>) {
-        this.data = data
+    fun setNotes(notes: List<Note>) {
+        this.notes = notes
         notifyDataSetChanged()
     }
 
     enum class Type {
-        Main,
+        Default,
         Profile,
     }
 
     class ProfileViewHolder(val binding: ListItemProfileNoteBinding) : ViewHolder(binding.root)
-    class MainViewHolder(val binding: ListItemNoteBinding) : ViewHolder(binding.root)
+    class DefaultViewHolder(val binding: ListItemDefaultNoteBinding) : ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = when (type) {
-        Type.Main -> MainViewHolder(
-            ListItemNoteBinding.inflate(
+        Type.Default -> DefaultViewHolder(
+            ListItemDefaultNoteBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -48,15 +49,31 @@ class NoteAdapter<T>(
         )
     }
 
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount(): Int = notes.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = notes[position]
         holder.apply {
             when (this) {
-                is MainViewHolder -> {}
-                is ProfileViewHolder -> {
-                    val item = data[position] as UserProfileResponse.Note
+                is DefaultViewHolder -> {
+                    binding.apply {
+                        textViewTitle.text = item.title
+                        textViewDescription.text = item.description
+                        textViewUser.text = item.user.name
+                        textViewComments.text = item.count.comments.toString()
+                        textViewLikes.text = item.count.likes.toString()
+                        textViewViews.text = item.views.toString()
 
+                        (cardView.layoutParams as LinearLayout.LayoutParams).apply {
+                            setMargins(16.dp, if (position == 0) 0 else 4.dp, 16.dp, 0)
+                        }
+                        cardView.setOnClickListener {
+                            onItemClick(item.id)
+                        }
+                    }
+                }
+
+                is ProfileViewHolder -> {
                     binding.apply {
                         textViewTitle.text = item.title
                         textViewDescription.text = item.description
@@ -67,8 +84,9 @@ class NoteAdapter<T>(
                         (cardView.layoutParams as LinearLayout.LayoutParams).apply {
                             setMargins(16.dp, if (position == 0) 0 else 4.dp, 16.dp, 0)
                         }
-
-                        cardView.setOnClickListener { }
+                        cardView.setOnClickListener {
+                            onItemClick(item.id)
+                        }
                     }
                 }
             }

@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.html)
     implementation(libs.logging.interceptor)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.image.glide)
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)
