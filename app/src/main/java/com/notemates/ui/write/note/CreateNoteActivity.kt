@@ -7,15 +7,19 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
+import com.notemates.core.utils.StateStatus
+import com.notemates.core.utils.Utils
 import com.notemates.databinding.ActivityCreateNoteBinding
 import com.notemates.ui.write.note.adapters.CreateNoteFragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CreateNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateNoteBinding
-
     private val viewModel by viewModels<CreateNoteViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,33 +35,34 @@ class CreateNoteActivity : AppCompatActivity() {
             insets
         }
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        lifecycleScope.launch {
+            viewModel.uiState.collect {
+                val (_, status, message) = it
+                binding.progressIndicator.isVisible = status == StateStatus.Loading
+                if (status == StateStatus.Failure)
+                    Utils.showSnackbar(binding.root, message)
+                else if (status == StateStatus.Success)
+                    finish()
+            }
+        }
 
-        val fragmentStateAdapter = CreateNoteFragmentStateAdapter(this)
-        binding.viewPager.adapter = fragmentStateAdapter
-        binding.viewPager.isUserInputEnabled = false
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = getString(CreateNoteFragmentStateAdapter.titles[position])
-        }.attach()
+        binding.apply {
+            setSupportActionBar(toolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-//        val markwon = Markwon.create(applicationContext)
-//        val markwonEditor = MarkwonEditor.create(markwon)
-
-//        binding.editTextEditor.addTextChangedListener(
-//            MarkwonEditorTextWatcher.withPreRender(
-//                markwonEditor,
-//                Executors.newCachedThreadPool(),
-//                binding.editTextEditor,
-//            )
-//        )
+            val fragmentStateAdapter = CreateNoteFragmentStateAdapter(this@CreateNoteActivity)
+            viewPager.adapter = fragmentStateAdapter
+            viewPager.isUserInputEnabled = false
+            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                tab.text = getString(CreateNoteFragmentStateAdapter.titles[position])
+            }.attach()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
         }
-
         return super.onOptionsItemSelected(item)
     }
 }

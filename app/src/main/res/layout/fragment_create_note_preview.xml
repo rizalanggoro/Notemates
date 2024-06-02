@@ -6,10 +6,31 @@
     android:orientation="vertical"
     tools:context=".ui.write.note.fragments.CreateNotePreviewFragment">
 
-    <TextView
-        android:id="@+id/textViewMarkdownContainer"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="@string/app_name" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.Material3.BodyMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="Berikut adalah pratinjau dari konten yang Anda tulis. Anda dapat menggunakan format atau sintaks markdown untuk memperkaya gaya penulisan" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/textViewMarkdownContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

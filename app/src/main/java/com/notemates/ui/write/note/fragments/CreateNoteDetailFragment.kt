@@ -28,11 +28,19 @@ class CreateNoteDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewModel = viewModel
-        binding.buttonPublish.setOnClickListener {
-            val title = binding.editTextTitle.text.toString()
-            val description = binding.editTextDescription.text.toString()
-            viewModel.publish(title, description)
+        binding.apply {
+            viewModel.authenticatedUser.let {
+                if (it != null) {
+                    textViewName.text = it.name
+                    textViewEmail.text = it.email
+                }
+            }
+
+            buttonPublish.setOnClickListener {
+                val title = editTextTitle.text.toString()
+                val description = editTextDescription.text.toString()
+                viewModel.publish(title, description)
+            }
         }
     }
 

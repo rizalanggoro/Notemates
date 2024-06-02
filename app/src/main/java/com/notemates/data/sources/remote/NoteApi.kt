@@ -1,6 +1,7 @@
 package com.notemates.data.sources.remote
 
 import com.notemates.data.models.Note
+import com.notemates.data.models.requests.NoteCreatePayload
 import com.notemates.data.models.requests.NoteDashboardRequest
 import retrofit2.Response
 import retrofit2.http.Body
@@ -9,8 +10,8 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface NoteApi {
-    @GET("notes/trending")
-    suspend fun getTrending(): Response<List<Note>>
+    @GET("notes/popular")
+    suspend fun getPopular(): Response<List<Note>>
 
     @GET("notes/latest")
     suspend fun getLatest(): Response<List<Note>>
@@ -23,4 +24,7 @@ interface NoteApi {
 
     @GET("notes/{idNote}/increment-view")
     suspend fun incrementView(@Path("idNote") idNote: Int): Response<Any>
+
+    @POST("notes")
+    suspend fun create(@Body payload: NoteCreatePayload): Response<Note>
 }

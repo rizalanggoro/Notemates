@@ -10,10 +10,10 @@
         android:icon="@drawable/explore"
         android:title="@string/explore" />
 
-    <item
-        android:id="@+id/trending_fragment"
-        android:icon="@drawable/trending"
-        android:title="@string/trending" />
+<!--    <item-->
+<!--        android:id="@+id/trending_fragment"-->
+<!--        android:icon="@drawable/trending"-->
+<!--        android:title="@string/trending" />-->
 
     <item
         android:id="@+id/profile_fragment"

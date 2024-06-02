@@ -5,6 +5,7 @@ import android.util.Log
 import arrow.core.Either
 import com.notemates.R
 import com.notemates.data.models.Note
+import com.notemates.data.models.requests.NoteCreatePayload
 import com.notemates.data.models.requests.NoteDashboardRequest
 import com.notemates.data.sources.remote.NoteApi
 import javax.inject.Inject
@@ -17,8 +18,8 @@ class NoteRepository @Inject constructor(
         private const val TAG = "NoteRepository"
     }
 
-    suspend fun getTrending(): Either<Error, List<Note>> = try {
-        val response = noteApi.getTrending()
+    suspend fun getPopular(): Either<Error, List<Note>> = try {
+        val response = noteApi.getPopular()
         if (response.isSuccessful)
             Either.Right(response.body()!!)
         else
@@ -63,5 +64,24 @@ class NoteRepository @Inject constructor(
         } catch (e: Exception) {
             Log.e(TAG, "incrementView: ${e.message}")
         }
+    }
+
+    suspend fun create(
+        title: String,
+        description: String,
+        content: String,
+        idUser: Int,
+    ): Either<Error, Note> = try {
+        val response = noteApi.create(
+            NoteCreatePayload(
+                title, description, content, idUser
+            )
+        )
+        if (response.isSuccessful)
+            Either.Right(response.body()!!)
+        else
+            Either.Left(Error(application.getString(R.string.something_went_wrong)))
+    } catch (e: Exception) {
+        Either.Left(Error(e.message))
     }
 }

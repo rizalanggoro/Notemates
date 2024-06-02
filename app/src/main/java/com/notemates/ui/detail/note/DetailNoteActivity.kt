@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import com.notemates.R
 import com.notemates.core.utils.StateStatus
 import com.notemates.core.utils.Utils
 import com.notemates.data.models.Note
@@ -74,6 +75,10 @@ class DetailNoteActivity : AppCompatActivity() {
             textViewTitle.text = response.title
             textViewDescription.text = response.description
             textViewUser.text = response.user.name
+            textViewViews.text = String.format(
+                getString(R.string.format_readers),
+                response.views,
+            )
 
             val markwon = Markwon.builder(applicationContext)
                 .usePlugin(GlideImagesPlugin.create(applicationContext))

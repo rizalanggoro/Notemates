@@ -6,13 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.notemates.databinding.FragmentCreateNotePreviewBinding
+import com.notemates.ui.write.note.CreateNoteUiState.Action
 import com.notemates.ui.write.note.CreateNoteViewModel
+import kotlinx.coroutines.launch
 
 class CreateNotePreviewFragment : Fragment() {
     private var _binding: FragmentCreateNotePreviewBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel by viewModels<CreateNoteViewModel>(
         ownerProducer = { requireActivity() }
     )
@@ -28,10 +30,11 @@ class CreateNotePreviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.markdownContent.observe(requireActivity()) {
-            viewModel.markwon.setMarkdown(
-                binding.textViewMarkdownContainer, it
-            )
+        lifecycleScope.launch {
+            viewModel.uiState.collect {
+                if (it.action == Action.ChangeContent)
+                    viewModel.markwon.setMarkdown(binding.textViewMarkdownContainer, it.content)
+            }
         }
     }
 

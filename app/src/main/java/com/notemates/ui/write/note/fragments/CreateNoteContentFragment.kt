@@ -31,16 +31,18 @@ class CreateNoteContentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.editTextContent.doAfterTextChanged {
-            viewModel.markdownContent.value = it.toString()
-        }
-        binding.editTextContent.addTextChangedListener(
-            MarkwonEditorTextWatcher.withPreRender(
-                viewModel.markwonEditor,
-                Executors.newCachedThreadPool(),
-                binding.editTextContent,
+        binding.apply {
+            editTextContent.doAfterTextChanged {
+                viewModel.changeContent(it.toString())
+            }
+            editTextContent.addTextChangedListener(
+                MarkwonEditorTextWatcher.withPreRender(
+                    viewModel.markwonEditor,
+                    Executors.newCachedThreadPool(),
+                    binding.editTextContent,
+                )
             )
-        )
+        }
     }
 
     override fun onDestroy() {

@@ -52,11 +52,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-
-
-//        startActivity(Intent(this, DetailNoteActivity::class.java).apply {
-//            putExtra("idNote", 1)
-//        })
     }
 
     private fun initNavController() {
@@ -82,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                     setOf(
                         R.id.dashboard_fragment,
                         R.id.explore_fragment,
-                        R.id.trending_fragment,
+//                        R.id.trending_fragment,
                         R.id.profile_fragment,
                     )
                 )

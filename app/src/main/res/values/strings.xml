@@ -36,5 +36,6 @@
     <string name="write_something">Ketik sesuatu</string>
     <string name="dashboard_greeting">Hello, %s</string>
     <string name="format_followers">%d pengikut</string>
+    <string name="format_readers">%d pembaca</string>
     <string name="note">Catatan</string>
 </resources>

@@ -30,7 +30,8 @@ class ExploreFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModels<ExploreViewModel>()
 
-    private lateinit var noteAdapter: NoteAdapter
+    private lateinit var noteAdapterPopular: NoteAdapter
+    private lateinit var noteAdapterLatest: NoteAdapter
     private lateinit var menuProvider: MenuProvider
 
     override fun onCreateView(
@@ -52,25 +53,45 @@ class ExploreFragment : Fragment() {
 
         initRecyclerView()
         initToolbarMenu()
+
+        viewModel.getPopular()
         viewModel.getLatest()
 
         lifecycleScope.launch {
             viewModel.uiState.collect {
-                val (status, message) = it
-                if (status == StateStatus.Loading)
-                    showLoadingUi(true)
-                else {
-                    showLoadingUi(false)
-                    if (status == StateStatus.Failure)
-                        Utils.showSnackbar(binding.root, message)
-                    else if (status == StateStatus.Success)
-                        noteAdapter.setNotes(it.notes)
+                val (action, status, message) = it
+                when (action) {
+                    ExploreUiState.Action.Initial -> {}
+                    ExploreUiState.Action.GetPopular -> {
+                        if (status == StateStatus.Loading)
+                            showLoadingUi(true)
+                        else {
+                            showLoadingUi(false)
+                            if (status == StateStatus.Failure)
+                                Utils.showSnackbar(binding.root, message)
+                            else if (status == StateStatus.Success)
+                                noteAdapterPopular.setNotes(it.popularNotes)
+                        }
+                    }
+
+                    ExploreUiState.Action.GetLatest -> {
+                        if (status == StateStatus.Loading)
+                            showLoadingUi(true)
+                        else {
+                            showLoadingUi(false)
+                            if (status == StateStatus.Failure)
+                                Utils.showSnackbar(binding.root, message)
+                            else if (status == StateStatus.Success)
+                                noteAdapterLatest.setNotes(it.latestNotes)
+                        }
+                    }
                 }
             }
         }
 
         binding.apply {
             swipeRefreshLayout.setOnRefreshListener {
+                viewModel.getPopular()
                 viewModel.getLatest()
                 if (swipeRefreshLayout.isRefreshing)
                     swipeRefreshLayout.isRefreshing = false
@@ -105,16 +126,31 @@ class ExploreFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        noteAdapter = NoteAdapter(NoteAdapter.Type.Default) {
+        noteAdapterPopular = NoteAdapter(NoteAdapter.Type.Default) {
             startActivity(Intent(requireContext(), DetailNoteActivity::class.java).apply {
                 putExtra("idNote", it)
             })
         }
-        binding.recyclerView.apply {
+
+        noteAdapterLatest = NoteAdapter(NoteAdapter.Type.Default) {
+            startActivity(Intent(requireContext(), DetailNoteActivity::class.java).apply {
+                putExtra("idNote", it)
+            })
+        }
+
+        binding.recyclerViewPopular.apply {
             layoutManager = object : LinearLayoutManager(requireContext()) {
                 override fun canScrollVertically(): Boolean = false
             }
-            adapter = noteAdapter
+            adapter = noteAdapterPopular
+            isNestedScrollingEnabled = false
+        }
+
+        binding.recyclerViewLatest.apply {
+            layoutManager = object : LinearLayoutManager(requireContext()) {
+                override fun canScrollVertically(): Boolean = false
+            }
+            adapter = noteAdapterLatest
             isNestedScrollingEnabled = false
         }
     }
