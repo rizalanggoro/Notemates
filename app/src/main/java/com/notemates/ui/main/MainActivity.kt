@@ -52,6 +52,10 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+
+//        startActivity(Intent(applicationContext, FollowsActivity::class.java).apply {
+//            putExtra("idUser", 1)
+//        })
     }
 
     private fun initNavController() {

@@ -60,7 +60,6 @@ class NoteAdapter(
                         textViewTitle.text = item.title
                         textViewDescription.text = item.description
                         textViewUser.text = item.user.name
-                        textViewComments.text = item.count.comments.toString()
                         textViewLikes.text = item.count.likes.toString()
                         textViewViews.text = item.views.toString()
 
@@ -77,7 +76,6 @@ class NoteAdapter(
                     binding.apply {
                         textViewTitle.text = item.title
                         textViewDescription.text = item.description
-                        textViewComments.text = item.count.comments.toString()
                         textViewViews.text = item.views.toString()
                         textViewLikes.text = item.count.likes.toString()
 

@@ -3,17 +3,27 @@ package com.notemates.ui.main.fragments.profile
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.notemates.R
 import com.notemates.core.utils.StateStatus
 import com.notemates.core.utils.Utils
 import com.notemates.data.models.responses.UserProfileResponse
 import com.notemates.databinding.FragmentProfileBinding
+import com.notemates.ui.adapters.NoteAdapter
 import com.notemates.ui.auth.AuthActivity
+import com.notemates.ui.detail.note.DetailNoteActivity
+import com.notemates.ui.detail.user.follows.FollowsActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,6 +33,8 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<ProfileViewModel>()
+    private lateinit var noteAdapter: NoteAdapter
+    private lateinit var menuProvider: MenuProvider
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +47,8 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initMenu()
+        initRecyclerView()
         viewModel.loadProfile()
 
         lifecycleScope.launch {
@@ -65,24 +79,32 @@ class ProfileFragment : Fragment() {
             textViewName.text = viewModel.authenticatedUser?.name ?: "No name"
             textViewEmail.text = viewModel.authenticatedUser?.email ?: "No email"
 
-            buttonLogout.setOnClickListener {
-                viewModel.logout()
-            }
-
             swipeRefreshLayout.setOnRefreshListener {
                 viewModel.loadProfile()
                 if (swipeRefreshLayout.isRefreshing)
                     swipeRefreshLayout.isRefreshing = false
             }
+
+            val gotoFollows = fun() {
+                val idUser = viewModel.authenticatedUser?.id
+                if (idUser != null)
+                    startActivity(Intent(requireContext(), FollowsActivity::class.java).apply {
+                        putExtra("idUser", idUser)
+                    })
+            }
+            linearLayoutFollowedBy.setOnClickListener { gotoFollows() }
+            linearLayoutFollowing.setOnClickListener { gotoFollows() }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        requireActivity().removeMenuProvider(menuProvider)
     }
 
     private fun showProfileUi(response: UserProfileResponse) {
+        noteAdapter.setNotes(response.notes)
         binding.apply {
             textViewName.text = response.name
             textViewEmail.text = response.email
@@ -90,5 +112,42 @@ class ProfileFragment : Fragment() {
             textViewFollowingCount.text = response.count.following.toString()
             textViewNotesCount.text = response.count.notes.toString()
         }
+    }
+
+    private fun initRecyclerView() {
+        noteAdapter = NoteAdapter(NoteAdapter.Type.Profile) {
+            startActivity(Intent(requireContext(), DetailNoteActivity::class.java).apply {
+                putExtra("idNote", it)
+            })
+        }
+        binding.recyclerView.apply {
+            layoutManager = object : LinearLayoutManager(requireContext()) {
+                override fun canScrollVertically() = false
+            }
+            adapter = noteAdapter
+            isNestedScrollingEnabled = false
+        }
+    }
+
+    private fun initMenu() {
+        menuProvider = object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.main_profile, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menuLogout -> MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Keluar")
+                        .setMessage("Apakah Anda yakin akan keluar dari aplikasi?")
+                        .setPositiveButton("Keluar") { _, _ -> viewModel.logout() }
+                        .setNegativeButton("Batal") { dialog, _ -> dialog.dismiss() }
+                        .create()
+                        .show()
+                }
+                return true
+            }
+        }
+        requireActivity().addMenuProvider(menuProvider)
     }
 }

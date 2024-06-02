@@ -17,6 +17,7 @@ import com.notemates.data.models.responses.UserProfileResponse
 import com.notemates.databinding.ActivityDetailUserBinding
 import com.notemates.ui.adapters.NoteAdapter
 import com.notemates.ui.detail.note.DetailNoteActivity
+import com.notemates.ui.detail.user.follows.FollowsActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -71,6 +72,14 @@ class DetailUserActivity : AppCompatActivity() {
                 if (swipeRefreshLayout.isRefreshing)
                     swipeRefreshLayout.isRefreshing = false
             }
+
+            val gotoFollows = fun() {
+                startActivity(Intent(applicationContext, FollowsActivity::class.java).apply {
+                    putExtra("idUser", idUser)
+                })
+            }
+            linearLayoutFollowedBy.setOnClickListener { gotoFollows() }
+            linearLayoutFollowing.setOnClickListener { gotoFollows() }
         }
     }
 

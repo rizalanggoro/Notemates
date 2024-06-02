@@ -1,39 +1,55 @@
 package com.notemates.ui.detail.user.follows
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.tabs.TabLayoutMediator
-import com.notemates.R
-import layout.SectionPageAdapter
+import com.notemates.databinding.ActivityFollowsBinding
+import com.notemates.ui.detail.user.follows.adapters.FollowsFragmentStateAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FollowsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityFollowsBinding
 
-    companion object {
-        @StringRes
-        private val TAB_TITLES = intArrayOf(
-            R.string.tab_following,
-            R.string.tab_followers
-        )
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_follows)
 
-        val sectionsPagerAdapter = SectionPageAdapter(this)
-        val viewPager: ViewPager2 = findViewById(R.id.view_pager)
-        viewPager.adapter = sectionsPagerAdapter
-        val tabs: TabLayout = findViewById(R.id.tabs)
-        TabLayoutMediator(tabs, viewPager) {
-                tab, position ->
-            tab.text = resources.getString(TAB_TITLES[position])
-        }.attach()
+        binding = ActivityFollowsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        supportActionBar?.elevation = 0f
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        val idUser = intent.extras?.getInt("idUser")
+        if (idUser == null) finish()
+
+        binding.apply {
+            setSupportActionBar(toolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+            val sectionsPagerAdapter = FollowsFragmentStateAdapter(
+                this@FollowsActivity, idUser!!
+            )
+            viewPager.adapter = sectionsPagerAdapter
+
+            TabLayoutMediator(tabs, viewPager) { tab, position ->
+                tab.text = resources.getString(FollowsFragmentStateAdapter.titles[position])
+            }.attach()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

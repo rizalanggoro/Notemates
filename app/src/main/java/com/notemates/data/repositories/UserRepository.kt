@@ -3,6 +3,7 @@ package com.notemates.data.repositories
 import android.app.Application
 import arrow.core.Either
 import com.notemates.R
+import com.notemates.data.models.User
 import com.notemates.data.models.requests.UserProfileRequest
 import com.notemates.data.models.responses.UserProfileResponse
 import com.notemates.data.sources.remote.UserApi
@@ -21,6 +22,30 @@ class UserRepository @Inject constructor(
                 idRequester
             )
         )
+        if (response.isSuccessful)
+            Either.Right(response.body()!!)
+        else
+            Either.Left(Error(application.getString(R.string.something_went_wrong)))
+    } catch (e: Exception) {
+        Either.Left(Error(e.message))
+    }
+
+    suspend fun getFollowedBy(
+        idUser: Int,
+    ): Either<Error, List<User>> = try {
+        val response = userApi.getFollowedBy(idUser)
+        if (response.isSuccessful)
+            Either.Right(response.body()!!)
+        else
+            Either.Left(Error(application.getString(R.string.something_went_wrong)))
+    } catch (e: Exception) {
+        Either.Left(Error(e.message))
+    }
+
+    suspend fun getFollowing(
+        idUser: Int,
+    ): Either<Error, List<User>> = try {
+        val response = userApi.getFollowing(idUser)
         if (response.isSuccessful)
             Either.Right(response.body()!!)
         else
