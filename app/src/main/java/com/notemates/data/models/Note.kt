@@ -13,7 +13,6 @@ data class Note(
 ) {
     data class Count(
         val likes: Int,
-        val comments: Int,
     )
 
     data class User(
