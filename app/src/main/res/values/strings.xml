@@ -38,4 +38,6 @@
     <string name="format_followers">%d pengikut</string>
     <string name="format_readers">%d pembaca</string>
     <string name="note">Catatan</string>
+    <string name="tab_following">Following</string>
+    <string name="tab_followers">Followers</string>"
 </resources>
