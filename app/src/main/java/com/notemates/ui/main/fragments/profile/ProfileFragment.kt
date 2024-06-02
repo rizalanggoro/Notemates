@@ -85,15 +85,15 @@ class ProfileFragment : Fragment() {
                     swipeRefreshLayout.isRefreshing = false
             }
 
-            val gotoFollows = fun() {
-                val idUser = viewModel.authenticatedUser?.id
-                if (idUser != null)
-                    startActivity(Intent(requireContext(), FollowsActivity::class.java).apply {
-                        putExtra("idUser", idUser)
-                    })
-            }
-            linearLayoutFollowedBy.setOnClickListener { gotoFollows() }
-            linearLayoutFollowing.setOnClickListener { gotoFollows() }
+//            val gotoFollows = fun() {
+//                val idUser = viewModel.authenticatedUser?.id
+//                if (idUser != null)
+//                    startActivity(Intent(requireContext(), FollowsActivity::class.java).apply {
+//                        putExtra("idUser", idUser)
+//                    })
+//            }
+            linearLayoutFollowedBy.setOnClickListener { followsClicked(0) }
+            linearLayoutFollowing.setOnClickListener { followsClicked(1) }
         }
     }
 
@@ -149,5 +149,14 @@ class ProfileFragment : Fragment() {
             }
         }
         requireActivity().addMenuProvider(menuProvider)
+    }
+
+    private fun followsClicked(selectedTab: Int) {
+        val idUser = viewModel.authenticatedUser?.id
+        if (idUser != null)
+            startActivity(Intent(requireContext(), FollowsActivity::class.java).apply {
+                putExtra("idUser", idUser)
+                putExtra("selectedTab", selectedTab)
+            })
     }
 }

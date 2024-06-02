@@ -43,6 +43,9 @@ class FollowsActivity : AppCompatActivity() {
             TabLayoutMediator(tabs, viewPager) { tab, position ->
                 tab.text = resources.getString(FollowsFragmentStateAdapter.titles[position])
             }.attach()
+
+            val selectedTab = intent.getIntExtra("selectedTab", 0)
+            viewPager.currentItem = selectedTab
         }
     }
 
