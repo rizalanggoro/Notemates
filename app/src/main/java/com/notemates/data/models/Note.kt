@@ -10,6 +10,7 @@ data class Note(
     val views: Int,
     @field:SerializedName("_count") val count: Count,
     val user: User,
+    val isLiked: Boolean,
 ) {
     data class Count(
         val likes: Int,

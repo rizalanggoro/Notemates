@@ -37,6 +37,7 @@
     <string name="dashboard_greeting">Hello, %s</string>
     <string name="format_followers">%d pengikut</string>
     <string name="format_readers">%d pembaca</string>
+    <string name="format_likes">%d suka</string>
     <string name="note">Catatan</string>
     <string name="following">Mengikuti</string>
     <string name="follower">Pengikut</string>"

@@ -20,6 +20,7 @@ class AuthRepository @Inject constructor(
     private val prefAuthSessionKey = "auth-session"
     private var _authenticatedUser: User? = null
     val authenticatedUser get() = _authenticatedUser
+    val idRequester get() = authenticatedUser?.id
 
     init {
         val sessionString = preferences.instance().getString(prefAuthSessionKey, null)

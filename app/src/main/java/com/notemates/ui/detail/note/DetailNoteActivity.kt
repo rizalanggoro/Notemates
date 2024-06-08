@@ -5,6 +5,7 @@ import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -44,16 +45,39 @@ class DetailNoteActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.uiState.collect {
-                val (status, message) = it
-                if (status == StateStatus.Loading)
-                    showLoadingUi(true)
-                else {
-                    showLoadingUi(false)
-                    if (status == StateStatus.Failure)
-                        Utils.showSnackbar(binding.root, message)
-                    else
-                        if (it.response != null)
-                            showDetailUi(it.response)
+                val (action, status, message) = it
+                when (action) {
+                    DetailNoteUiState.Action.Initial -> {}
+                    DetailNoteUiState.Action.Like -> {
+                        if (status == StateStatus.Failure)
+                            Utils.showSnackbar(binding.root, message)
+                        else if (status == StateStatus.Success) {
+                            binding.fabLike.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    applicationContext,
+                                    if (it.currentIsLiked) R.drawable.thumb_up_filled
+                                    else R.drawable.thumb_up
+                                )
+                            )
+                            binding.textViewLikes.text = String.format(
+                                getString(R.string.format_likes),
+                                it.currentLikesCount,
+                            )
+                        }
+                    }
+
+                    DetailNoteUiState.Action.GetNote -> {
+                        if (status == StateStatus.Loading)
+                            showLoadingUi(true)
+                        else {
+                            showLoadingUi(false)
+                            if (status == StateStatus.Failure)
+                                Utils.showSnackbar(binding.root, message)
+                            else
+                                if (it.response != null)
+                                    showDetailUi(it.response)
+                        }
+                    }
                 }
             }
         }
@@ -67,6 +91,8 @@ class DetailNoteActivity : AppCompatActivity() {
                 if (swipeRefreshLayout.isRefreshing)
                     swipeRefreshLayout.isRefreshing = false
             }
+
+            fabLike.setOnClickListener { viewModel.likeDislike(idNote) }
         }
     }
 
@@ -79,11 +105,23 @@ class DetailNoteActivity : AppCompatActivity() {
                 getString(R.string.format_readers),
                 response.views,
             )
+            textViewLikes.text = String.format(
+                getString(R.string.format_likes),
+                response.count.likes,
+            )
 
             val markwon = Markwon.builder(applicationContext)
                 .usePlugin(GlideImagesPlugin.create(applicationContext))
                 .build()
             markwon.setMarkdown(textViewContent, response.content)
+
+            fabLike.setImageDrawable(
+                ContextCompat.getDrawable(
+                    applicationContext,
+                    if (response.isLiked) R.drawable.thumb_up_filled
+                    else R.drawable.thumb_up
+                )
+            )
         }
     }
 

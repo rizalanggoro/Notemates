@@ -53,4 +53,30 @@ class UserRepository @Inject constructor(
     } catch (e: Exception) {
         Either.Left(Error(e.message))
     }
+
+    suspend fun follow(
+        idRequester: Int,
+        idUser: Int,
+    ): Either<Error, Unit> = try {
+        val response = userApi.follow(idRequester, idUser)
+        if (response.isSuccessful)
+            Either.Right(Unit)
+        else
+            Either.Left(Error(application.getString(R.string.something_went_wrong)))
+    } catch (e: Exception) {
+        Either.Left(Error(e.message))
+    }
+
+    suspend fun unfollow(
+        idRequester: Int,
+        idUser: Int,
+    ): Either<Error, Unit> = try {
+        val response = userApi.unfollow(idRequester, idUser)
+        if (response.isSuccessful)
+            Either.Right(Unit)
+        else
+            Either.Left(Error(application.getString(R.string.something_went_wrong)))
+    } catch (e: Exception) {
+        Either.Left(Error(e.message))
+    }
 }

@@ -6,6 +6,7 @@ import com.notemates.data.models.requests.NoteDashboardRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -20,7 +21,22 @@ interface NoteApi {
     suspend fun getDashboard(@Body payload: NoteDashboardRequest): Response<List<Note>>
 
     @GET("notes/{idNote}")
-    suspend fun get(@Path("idNote") idNote: Int): Response<Note>
+    suspend fun get(
+        @Header("idRequester") idRequester: Int,
+        @Path("idNote") idNote: Int
+    ): Response<Note>
+
+    @GET("notes/{idNote}/like")
+    suspend fun like(
+        @Header("idRequester") idRequester: Int,
+        @Path("idNote") idNote: Int
+    ): Response<Any>
+
+    @GET("notes/{idNote}/dislike")
+    suspend fun dislike(
+        @Header("idRequester") idRequester: Int,
+        @Path("idNote") idNote: Int
+    ): Response<Any>
 
     @GET("notes/{idNote}/increment-view")
     suspend fun incrementView(@Path("idNote") idNote: Int): Response<Any>

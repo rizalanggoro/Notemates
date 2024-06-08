@@ -48,8 +48,11 @@ class NoteRepository @Inject constructor(
         Either.Left(Error(e.message))
     }
 
-    suspend fun get(idNote: Int): Either<Error, Note> = try {
-        val response = noteApi.get(idNote)
+    suspend fun get(
+        idRequester: Int,
+        idNote: Int
+    ): Either<Error, Note> = try {
+        val response = noteApi.get(idRequester, idNote)
         if (response.isSuccessful)
             Either.Right(response.body()!!)
         else
@@ -64,6 +67,26 @@ class NoteRepository @Inject constructor(
         } catch (e: Exception) {
             Log.e(TAG, "incrementView: ${e.message}")
         }
+    }
+
+    suspend fun like(idRequester: Int, idNote: Int): Either<Error, Unit> = try {
+        val response = noteApi.like(idRequester, idNote)
+        if (response.isSuccessful)
+            Either.Right(Unit)
+        else
+            Either.Left(Error(application.getString(R.string.something_went_wrong)))
+    } catch (e: Exception) {
+        Either.Left(Error(application.getString(R.string.something_went_wrong)))
+    }
+
+    suspend fun dislike(idRequester: Int, idNote: Int): Either<Error, Unit> = try {
+        val response = noteApi.dislike(idRequester, idNote)
+        if (response.isSuccessful)
+            Either.Right(Unit)
+        else
+            Either.Left(Error(application.getString(R.string.something_went_wrong)))
+    } catch (e: Exception) {
+        Either.Left(Error(application.getString(R.string.something_went_wrong)))
     }
 
     suspend fun create(

@@ -48,17 +48,32 @@ class DetailUserActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.uiState.collect {
-                val (status, message) = it
-                if (status == StateStatus.Loading)
-                    showLoadingUi(true)
-                else {
-                    showLoadingUi(false)
-                    if (status == StateStatus.Success) {
-                        val response = it.response
-                        if (response != null) showProfileUi(response)
-                    } else if (status == StateStatus.Failure) Utils.showSnackbar(
-                        binding.root, message
-                    )
+                val (action, status, message) = it
+                when (action) {
+                    DetailUserUiState.Action.Initial -> {}
+                    DetailUserUiState.Action.GetProfile -> {
+                        if (status == StateStatus.Loading)
+                            showLoadingUi(true)
+                        else {
+                            showLoadingUi(false)
+                            if (status == StateStatus.Failure)
+                                Utils.showSnackbar(binding.root, message)
+                            else if (status == StateStatus.Success) {
+                                val response = it.response
+                                if (response != null) showProfileUi(response)
+                            }
+                        }
+                    }
+
+                    DetailUserUiState.Action.FollowUnfollow -> {
+                        if (status == StateStatus.Failure)
+                            Utils.showSnackbar(binding.root, message)
+                        else if (status == StateStatus.Success) {
+                            binding.buttonFollow.isVisible = !it.currentIsFollowed
+                            binding.buttonUnfollow.isVisible = it.currentIsFollowed
+                            binding.textViewFollowedByCount.text = it.currentFollowedBy.toString()
+                        }
+                    }
                 }
             }
         }
@@ -80,6 +95,9 @@ class DetailUserActivity : AppCompatActivity() {
             }
             linearLayoutFollowedBy.setOnClickListener { gotoFollows() }
             linearLayoutFollowing.setOnClickListener { gotoFollows() }
+
+            buttonFollow.setOnClickListener { viewModel.followUnfollow(idUser) }
+            buttonUnfollow.setOnClickListener { viewModel.followUnfollow(idUser) }
         }
     }
 
