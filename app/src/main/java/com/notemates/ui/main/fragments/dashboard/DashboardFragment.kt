@@ -69,11 +69,11 @@ class DashboardFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        noteAdapter = NoteAdapter(NoteAdapter.Type.Default) {
+        noteAdapter = NoteAdapter(NoteAdapter.Type.Default, onItemClick = {
             startActivity(Intent(requireContext(), DetailNoteActivity::class.java).apply {
                 putExtra("idNote", it)
             })
-        }
+        })
         binding.recyclerView.apply {
             layoutManager = object : LinearLayoutManager(requireContext()) {
                 override fun canScrollVertically(): Boolean = false

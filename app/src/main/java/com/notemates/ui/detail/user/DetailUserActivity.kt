@@ -109,11 +109,11 @@ class DetailUserActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        noteAdapter = NoteAdapter(type = NoteAdapter.Type.Profile) {
+        noteAdapter = NoteAdapter(type = NoteAdapter.Type.Profile, onItemClick = {
             startActivity(Intent(applicationContext, DetailNoteActivity::class.java).apply {
                 putExtra("idNote", it)
             })
-        }
+        })
 
         binding.recyclerViewNotes.apply {
             layoutManager = object : LinearLayoutManager(application) {

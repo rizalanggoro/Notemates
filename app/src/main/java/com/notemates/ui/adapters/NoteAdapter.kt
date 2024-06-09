@@ -14,6 +14,7 @@ import com.notemates.databinding.ListItemProfileNoteBinding
 class NoteAdapter(
     private val type: Type,
     private val onItemClick: (idNote: Int) -> Unit,
+    private val onItemLongClick: ((note: Note) -> Unit)? = null
 ) : RecyclerView.Adapter<ViewHolder>() {
     private var notes: List<Note> = listOf()
 
@@ -84,6 +85,10 @@ class NoteAdapter(
                         }
                         cardView.setOnClickListener {
                             onItemClick(item.id)
+                        }
+                        cardView.setOnLongClickListener {
+                            onItemLongClick?.invoke(item)
+                            true
                         }
                     }
                 }

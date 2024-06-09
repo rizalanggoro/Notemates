@@ -126,17 +126,17 @@ class ExploreFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        noteAdapterPopular = NoteAdapter(NoteAdapter.Type.Default) {
+        noteAdapterPopular = NoteAdapter(NoteAdapter.Type.Default, onItemClick = {
             startActivity(Intent(requireContext(), DetailNoteActivity::class.java).apply {
                 putExtra("idNote", it)
             })
-        }
+        })
 
-        noteAdapterLatest = NoteAdapter(NoteAdapter.Type.Default) {
+        noteAdapterLatest = NoteAdapter(NoteAdapter.Type.Default, onItemClick = {
             startActivity(Intent(requireContext(), DetailNoteActivity::class.java).apply {
                 putExtra("idNote", it)
             })
-        }
+        })
 
         binding.recyclerViewPopular.apply {
             layoutManager = object : LinearLayoutManager(requireContext()) {
