@@ -139,6 +139,10 @@
                     android:layout_height="wrap_content"
                     android:padding="16dp"
                     android:text="@string/app_name" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="88dp" />
             </LinearLayout>
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

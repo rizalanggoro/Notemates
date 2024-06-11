@@ -57,8 +57,7 @@
                     android:id="@+id/edit_text_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nama lengkap"
-                    android:text="Rizal Dwi Anggoro" />
+                    android:hint="Nama lengkap" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -71,8 +70,7 @@
                     android:id="@+id/edit_text_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Alamat email"
-                    android:text="rizal@email.com" />
+                    android:hint="Alamat email" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -85,8 +83,7 @@
                     android:id="@+id/edit_text_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Kata sandi"
-                    android:text="password" />
+                    android:hint="Kata sandi" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -101,8 +98,7 @@
                     android:id="@+id/edit_text_confirm_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Konfirmasi kata sandi"
-                    android:text="coba" />
+                    android:hint="Konfirmasi kata sandi" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
