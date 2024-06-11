@@ -55,6 +55,8 @@ class DashboardFragment : Fragment() {
         }
 
         binding.apply {
+            textViewGreeting.text =
+                String.format("Halo, %s", viewModel.authenticatedUser?.name ?: "-")
             swipeRefreshLayout.setOnRefreshListener {
                 viewModel.getNotes()
                 if (swipeRefreshLayout.isRefreshing)
