@@ -1,5 +1,6 @@
 package com.notemates.ui.detail.note
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +16,7 @@ import com.notemates.core.utils.StateStatus
 import com.notemates.core.utils.Utils
 import com.notemates.data.models.Note
 import com.notemates.databinding.ActivityDetailNoteBinding
+import com.notemates.ui.detail.user.DetailUserActivity
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import io.noties.markwon.image.glide.GlideImagesPlugin
@@ -92,6 +94,13 @@ class DetailNoteActivity : AppCompatActivity() {
                     swipeRefreshLayout.isRefreshing = false
             }
 
+            linearLayoutUser.setOnClickListener {
+                val idUser = viewModel.uiState.value.response?.user?.id
+                if (idUser != null)
+                    startActivity(Intent(applicationContext, DetailUserActivity::class.java).apply {
+                        putExtra("idUser", idUser)
+                    })
+            }
             fabLike.setOnClickListener { viewModel.likeDislike(idNote) }
         }
     }
