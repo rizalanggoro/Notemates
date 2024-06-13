@@ -5,6 +5,7 @@ import com.notemates.data.models.requests.NoteCreatePayload
 import com.notemates.data.models.requests.NoteDashboardRequest
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -25,6 +26,11 @@ interface NoteApi {
         @Header("idRequester") idRequester: Int,
         @Path("idNote") idNote: Int
     ): Response<Note>
+
+    @DELETE("notes/{idNote}")
+    suspend fun delete(
+        @Path("idNote") idNote: Int,
+    ): Response<Any>
 
     @GET("notes/{idNote}/like")
     suspend fun like(

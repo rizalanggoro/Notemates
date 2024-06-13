@@ -71,6 +71,15 @@ class ProfileFragment : Fragment() {
                             AuthActivity::class.java
                         )
                     ).also { requireActivity().finish() }
+
+                    ProfileUiState.Action.Delete -> {
+                        if (status == StateStatus.Failure)
+                            Utils.showSnackbar(binding.root, message)
+                        else if (status == StateStatus.Success) {
+                            Utils.showSnackbar(binding.root, "Berhasil menghapus catatan!")
+                            viewModel.loadProfile()
+                        }
+                    }
                 }
             }
         }
@@ -126,7 +135,11 @@ class ProfileFragment : Fragment() {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Hapus Catatan")
                     .setMessage("Apakah Anda yakin akan menghapus catatan dengan judul \"${it.title}\"?")
-                    .setPositiveButton("Hapus") { dialog, _ -> dialog.dismiss() }
+                    .setPositiveButton("Hapus") { dialog, _ ->
+                        viewModel.delete(it.id)
+                        dialog.dismiss()
+                        Utils.showSnackbar(binding.root, "Menghapus catatan...")
+                    }
                     .setNegativeButton("Batal") { dialog, _ -> dialog.dismiss() }
                     .create()
                     .show()

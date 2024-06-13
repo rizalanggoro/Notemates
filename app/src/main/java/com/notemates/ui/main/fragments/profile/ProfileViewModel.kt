@@ -8,6 +8,7 @@ import com.notemates.R
 import com.notemates.core.utils.StateStatus
 import com.notemates.data.models.User
 import com.notemates.data.repositories.AuthRepository
+import com.notemates.data.repositories.NoteRepository
 import com.notemates.data.repositories.UserRepository
 import com.notemates.ui.main.fragments.profile.ProfileUiState.Action
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,7 @@ class ProfileViewModel @Inject constructor(
     private val application: Application,
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
+    private val noteRepository: NoteRepository,
 ) : ViewModel() {
     val authenticatedUser: User? = authRepository.authenticatedUser
 
@@ -52,6 +54,34 @@ class ProfileViewModel @Inject constructor(
                             response = result.value,
                         )
                     }
+                }
+            }
+        }
+    }
+
+    fun delete(
+        idNote: Int
+    ) {
+        _uiState.value = uiState.value.copy(
+            action = Action.Delete,
+            status = StateStatus.Loading,
+        )
+
+        viewModelScope.launch {
+            val result = noteRepository.delete(idNote)
+            launch {
+                when (result) {
+                    is Either.Left -> _uiState.value = uiState.value.copy(
+                        action = Action.Delete,
+                        status = StateStatus.Failure,
+                        message = result.value.message
+                            ?: application.getString(R.string.something_went_wrong),
+                    )
+
+                    is Either.Right -> _uiState.value = uiState.value.copy(
+                        action = Action.Delete,
+                        status = StateStatus.Success,
+                    )
                 }
             }
         }

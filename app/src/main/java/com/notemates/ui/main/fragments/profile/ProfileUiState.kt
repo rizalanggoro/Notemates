@@ -13,5 +13,6 @@ data class ProfileUiState(
         Initial,
         LoadProfile,
         Logout,
+        Delete,
     }
 }

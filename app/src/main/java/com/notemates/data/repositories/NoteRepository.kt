@@ -61,6 +61,18 @@ class NoteRepository @Inject constructor(
         Either.Left(Error(e.message))
     }
 
+    suspend fun delete(
+        idNote: Int
+    ): Either<Error, Any> = try {
+        val response = noteApi.delete(idNote)
+        if (response.isSuccessful)
+            Either.Right(response.body()!!)
+        else
+            Either.Left(Error(application.getString(R.string.something_went_wrong)))
+    } catch (e: Exception) {
+        Either.Left(Error(e.message))
+    }
+
     suspend fun incrementView(idNote: Int) {
         try {
             noteApi.incrementView(idNote)
